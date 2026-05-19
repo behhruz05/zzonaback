@@ -1,0 +1,29 @@
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./src/swagger');
+
+const app = express();
+app.use(express.json());
+
+// Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Routes
+app.use('/api/categories', require('./src/routes/category.routes'));
+app.use('/api/products', require('./src/routes/product.routes'));
+
+app.get('/', (req, res) => res.json({ message: 'API is running', docs: '/api-docs' }));
+
+const PORT = process.env.PORT || 3000;
+
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log('MongoDB connected');
+    app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+  })
+  .catch(err => {
+    console.error('MongoDB connection error:', err.message);
+    process.exit(1);
+  });
