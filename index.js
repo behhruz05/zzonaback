@@ -18,10 +18,15 @@ app.get('/', (req, res) => res.json({ message: 'API is running', docs: '/api-doc
 
 const PORT = process.env.PORT || 3000;
 
+if (!process.env.MONGO_URI) {
+  console.error('ERROR: MONGO_URI environment variable is not set.');
+  process.exit(1);
+}
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('MongoDB connected');
-    app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch(err => {
     console.error('MongoDB connection error:', err.message);

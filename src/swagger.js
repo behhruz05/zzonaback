@@ -1,6 +1,11 @@
 const swaggerJsdoc = require('swagger-jsdoc');
 
-const options = {
+const servers = [
+  { url: 'https://zzonaback-production.up.railway.app', description: 'Production' },
+  { url: `http://localhost:${process.env.PORT || 3000}`, description: 'Local' },
+];
+
+const options = { 
   definition: {
     openapi: '3.0.0',
     info: {
@@ -8,7 +13,7 @@ const options = {
       version: '1.0.0',
       description: 'Products & Categories CRUD API',
     },
-    servers: [{ url: 'http://localhost:3000' }],
+    servers,
   },
   apis: ['./src/routes/*.js'],
 };
